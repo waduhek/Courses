@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		811C62FB248B77C900020F7D /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C62FA248B77C900020F7D /* PasswordField.swift */; };
-		812C7F52247299FD002B4E5B /* TextFieldWithDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C7F51247299FD002B4E5B /* TextFieldWithDivider.swift */; };
+		811C62FD248B79BF00020F7D /* TextFieldWithDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */; };
 		812C7F5424729A42002B4E5B /* RectangleDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C7F5324729A42002B4E5B /* RectangleDivider.swift */; };
 		813F2B542471BD2800E07F86 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813F2B532471BD2800E07F86 /* SignupView.swift */; };
 		8156C039247116C400C57966 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8156C038247116C400C57966 /* DataStructures.swift */; };
@@ -38,7 +38,7 @@
 
 /* Begin PBXFileReference section */
 		811C62FA248B77C900020F7D /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
-		812C7F51247299FD002B4E5B /* TextFieldWithDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TextFieldWithDivider.swift; path = Courses/Home/TextFieldWithDivider.swift; sourceTree = SOURCE_ROOT; };
+		811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithDivider.swift; sourceTree = "<group>"; };
 		812C7F5324729A42002B4E5B /* RectangleDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangleDivider.swift; sourceTree = "<group>"; };
 		813F2B532471BD2800E07F86 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		8156C038247116C400C57966 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
@@ -161,8 +161,8 @@
 		81FF3AA6246DAE1A007DA05B /* SupportingViews */ = {
 			isa = PBXGroup;
 			children = (
+				811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */,
 				811C62FA248B77C900020F7D /* PasswordField.swift */,
-				812C7F51247299FD002B4E5B /* TextFieldWithDivider.swift */,
 				812C7F5324729A42002B4E5B /* RectangleDivider.swift */,
 				81C3776B246EAEA800680DA5 /* ActivityIndicator.swift */,
 				81AB571C24826A9A00877591 /* LoadingView.swift */,
@@ -276,12 +276,12 @@
 				81C9CD1F24697D1100CBCBB5 /* SceneDelegate.swift in Sources */,
 				8156C039247116C400C57966 /* DataStructures.swift in Sources */,
 				81CB9A2B246C19C5008512F5 /* HomeView.swift in Sources */,
+				811C62FD248B79BF00020F7D /* TextFieldWithDivider.swift in Sources */,
 				81FF3AA5246D6485007DA05B /* User.swift in Sources */,
 				81AB571D24826A9A00877591 /* LoadingView.swift in Sources */,
 				813F2B542471BD2800E07F86 /* SignupView.swift in Sources */,
 				81C3776C246EAEA800680DA5 /* ActivityIndicator.swift in Sources */,
 				81C9CD2124697D1100CBCBB5 /* LoginView.swift in Sources */,
-				812C7F52247299FD002B4E5B /* TextFieldWithDivider.swift in Sources */,
 				812C7F5424729A42002B4E5B /* RectangleDivider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
