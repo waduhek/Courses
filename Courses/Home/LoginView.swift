@@ -160,6 +160,12 @@ struct LoginView: View {
         .onAppear {
             self.userSession.status = .unknown
             self.hideNavigationBar = true
+            
+            // Check if the session ID is already set.
+            if !self.userSession.sessionID.isEmpty {
+                // There is no need to login, proceed to the home view.
+                self.showHomeView = 1
+            }
         }
     }
 }

@@ -9,9 +9,12 @@
 /* Begin PBXBuildFile section */
 		811C62FB248B77C900020F7D /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C62FA248B77C900020F7D /* PasswordField.swift */; };
 		811C62FD248B79BF00020F7D /* TextFieldWithDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */; };
+		811C6303248BED5B00020F7D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 811C6301248BED5B00020F7D /* DataModel.xcdatamodeld */; };
 		812C7F5424729A42002B4E5B /* RectangleDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812C7F5324729A42002B4E5B /* RectangleDivider.swift */; };
 		813F2B542471BD2800E07F86 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813F2B532471BD2800E07F86 /* SignupView.swift */; };
+		814520A3248E59E4000A1580 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 814520A2248E59E4000A1580 /* LICENSE */; };
 		8156C039247116C400C57966 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8156C038247116C400C57966 /* DataStructures.swift */; };
+		8165359D2496389E005CE56E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8165359C2496389E005CE56E /* Utils.swift */; };
 		81AB571D24826A9A00877591 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81AB571C24826A9A00877591 /* LoadingView.swift */; };
 		81C3776C246EAEA800680DA5 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C3776B246EAEA800680DA5 /* ActivityIndicator.swift */; };
 		81C9CD1D24697D1100CBCBB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C9CD1C24697D1100CBCBB5 /* AppDelegate.swift */; };
@@ -39,9 +42,12 @@
 /* Begin PBXFileReference section */
 		811C62FA248B77C900020F7D /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 		811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithDivider.swift; sourceTree = "<group>"; };
+		811C6302248BED5B00020F7D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		812C7F5324729A42002B4E5B /* RectangleDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangleDivider.swift; sourceTree = "<group>"; };
 		813F2B532471BD2800E07F86 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		814520A2248E59E4000A1580 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		8156C038247116C400C57966 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
+		8165359C2496389E005CE56E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		81AB571C24826A9A00877591 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		81C3776B246EAEA800680DA5 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ActivityIndicator.swift; path = Courses/Models/ActivityIndicator.swift; sourceTree = SOURCE_ROOT; };
 		81C9CD1924697D1100CBCBB5 /* Courses.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Courses.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +102,8 @@
 				81C9CD3224697D1600CBCBB5 /* CoursesTests */,
 				81C9CD1A24697D1100CBCBB5 /* Products */,
 				81F6F1432473C505007204C2 /* Frameworks */,
+				811C6301248BED5B00020F7D /* DataModel.xcdatamodeld */,
+				814520A2248E59E4000A1580 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -116,6 +124,7 @@
 				813F2B522471BCC100E07F86 /* Home */,
 				81FF3AA6246DAE1A007DA05B /* SupportingViews */,
 				81FF3AA3246D6472007DA05B /* Models */,
+				8165359C2496389E005CE56E /* Utils.swift */,
 				81C9CD2224697D1600CBCBB5 /* Assets.xcassets */,
 				81C9CD2724697D1600CBCBB5 /* LaunchScreen.storyboard */,
 				81C9CD2A24697D1600CBCBB5 /* Info.plist */,
@@ -161,11 +170,11 @@
 		81FF3AA6246DAE1A007DA05B /* SupportingViews */ = {
 			isa = PBXGroup;
 			children = (
-				811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */,
 				811C62FA248B77C900020F7D /* PasswordField.swift */,
 				812C7F5324729A42002B4E5B /* RectangleDivider.swift */,
 				81C3776B246EAEA800680DA5 /* ActivityIndicator.swift */,
 				81AB571C24826A9A00877591 /* LoadingView.swift */,
+				811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */,
 			);
 			path = SupportingViews;
 			sourceTree = "<group>";
@@ -253,6 +262,7 @@
 			files = (
 				81C9CD2924697D1600CBCBB5 /* LaunchScreen.storyboard in Resources */,
 				81C9CD2624697D1600CBCBB5 /* Preview Assets.xcassets in Resources */,
+				814520A3248E59E4000A1580 /* LICENSE in Resources */,
 				81C9CD2324697D1600CBCBB5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,6 +284,7 @@
 				81C9CD1D24697D1100CBCBB5 /* AppDelegate.swift in Sources */,
 				811C62FB248B77C900020F7D /* PasswordField.swift in Sources */,
 				81C9CD1F24697D1100CBCBB5 /* SceneDelegate.swift in Sources */,
+				8165359D2496389E005CE56E /* Utils.swift in Sources */,
 				8156C039247116C400C57966 /* DataStructures.swift in Sources */,
 				81CB9A2B246C19C5008512F5 /* HomeView.swift in Sources */,
 				811C62FD248B79BF00020F7D /* TextFieldWithDivider.swift in Sources */,
@@ -281,6 +292,7 @@
 				81AB571D24826A9A00877591 /* LoadingView.swift in Sources */,
 				813F2B542471BD2800E07F86 /* SignupView.swift in Sources */,
 				81C3776C246EAEA800680DA5 /* ActivityIndicator.swift in Sources */,
+				811C6303248BED5B00020F7D /* DataModel.xcdatamodeld in Sources */,
 				81C9CD2124697D1100CBCBB5 /* LoginView.swift in Sources */,
 				812C7F5424729A42002B4E5B /* RectangleDivider.swift in Sources */,
 			);
@@ -366,7 +378,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -420,7 +432,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -545,6 +557,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		811C6301248BED5B00020F7D /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				811C6302248BED5B00020F7D /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 811C6302248BED5B00020F7D /* DataModel.xcdatamodel */;
+			name = DataModel.xcdatamodeld;
+			path = Courses/DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 81C9CD1124697D1100CBCBB5 /* Project object */;
 }

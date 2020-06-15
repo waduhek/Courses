@@ -1,4 +1,6 @@
+import os.log
 import UIKit
+import CoreData
 import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -10,10 +12,138 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        
+        
+        // Creating a new `UserSession` object.
+        let userSession = UserSession()
+        
+        // Obtain the managed object context of the persistent store.
+        guard let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
+            fatalError("[SceneDelegate] - Could not get managed object context.")
+        }
+        
+        // Fetching session ID from the store.
+        // Create a fetch request.
+        let fetchRequest: NSFetchRequest<SessionMO> = NSFetchRequest(entityName: "Session")
+        
+        let fetchResults: [SessionMO]
+        // Fetch results from the data store.
+        do {
+            fetchResults = try managedObjectContext.fetch(fetchRequest)
+        }
+        catch {
+            fatalError("[SceneDelegate] - Could not perform fetch request.")
+        }
+        
+        // Make sure that there is just one session ID found.
+        if fetchResults.count == 1 {
+            let result = fetchResults[0]
+            // Now, validate this session ID with the server.
+            // Create the request body.
+            let body = ValidateSession(
+                username: result.user!.username!,
+                sessionID: result.sessionID!,
+                sessionExpiryDate: result.sessionExpiryDate!
+            )
+            
+            // Encode the body
+            let encodedBody: Data
+            do {
+                encodedBody = try JSONEncoder().encode(body)
+            }
+            catch {
+                fatalError("[SceneDelegate] - Could not encode request body.")
+            }
+            
+            // Create a `URLRequest` object.
+            var urlRequest = URLRequest(url: URL(string: "http://192.168.1.127:8080/api/validate/")!)
+            // Configure its parameters.
+            urlRequest.httpMethod = "POST"
+            urlRequest.httpBody = encodedBody
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let (data, response, _) = syncDataTaskWithURLRequest(urlRequest)
+            
+            switch response.statusCode {
+            // The current session is already active.
+            case 200:
+                let responseBody: ValidateSessionResponse = decodeJSON(data: data)
+
+                userSession.firstName = result.user!.firstName!
+                userSession.lastName = result.user!.lastName!
+                userSession.email = result.user!.email!
+                userSession.lastLogin = result.user!.lastLogin!
+                userSession.sessionID = result.sessionID!
+                userSession.sessionExpiryDate = dateFromString(responseBody.serialisedSessionExpiryDate)
+
+                // Check if the session expiry dates match. Update if they do not.
+                if responseBody.serialisedSessionExpiryDate != result.sessionExpiryDate! {
+                    result.sessionExpiryDate = responseBody.serialisedSessionExpiryDate
+
+                    // Save the data.
+                    do {
+                        try managedObjectContext.save()
+                    }
+                    catch {
+                        fatalError("[SceneDelegate] - Could not update session expiry date.")
+                    }
+                }
+            // The current session is inactive or the session ID is incorrect.
+            case 401:
+                break
+            default:
+                fatalError("[SceneDelegate] - Unexpected status code.")
+            }
+            
+            // Perform the data task.
+//            dataTaskWithURLRequest(urlRequest) { (data, response, error) in
+//                switch response.statusCode {
+//                // The current session is already active.
+//                case 200:
+//                    let responseBody: ValidateSessionResponse = decodeJSON(data: data)
+//
+//                    DispatchQueue.main.sync {
+//                        userSession.firstName = result.user!.firstName!
+//                        userSession.lastName = result.user!.lastName!
+//                        userSession.email = result.user!.email!
+//                        userSession.lastLogin = result.user!.lastLogin!
+//                        userSession.sessionID = result.sessionID!
+//                        userSession.sessionExpiryDate = dateFromString(responseBody.serialisedSessionExpiryDate)
+//                    }
+//
+//                    // Check if the session expiry dates match. Update if they do not.
+//                    if responseBody.serialisedSessionExpiryDate != result.sessionExpiryDate! {
+//                        result.sessionExpiryDate = responseBody.serialisedSessionExpiryDate
+//
+//                        // Save the data.
+//                        do {
+//                            try managedObjectContext.save()
+//                        }
+//                        catch {
+//                            fatalError("[SceneDelegate] - Could not update session expiry date.")
+//                        }
+//                    }
+//                // The current session is inactive or the session ID is incorrect.
+//                case 401:
+//                    break
+//                default:
+//                    fatalError("[SceneDelegate] - Unexpected status code.")
+//                }
+//            }
+        }
+        else if fetchResults.count == 0 {
+            os_log(.info, log: .default, "[SceneDelegate] - No session IDs were found.")
+        }
+        else {
+            for result in fetchResults {
+                print(result.sessionID!)
+            }
+            fatalError("[SceneDelegate] - Fetch request returned multiple rows.")
+        }
 
         // Create the SwiftUI view that provides the window contents.
         let contentView = LoginView()
-            .environmentObject(UserSession())
+            .environmentObject(userSession)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

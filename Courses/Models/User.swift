@@ -1,36 +1,51 @@
+import os.log
 import Foundation
+import CoreData
+import UIKit.UIApplication
 import Combine
 
-/// Function to decode a `Data` object to a generic type `T` where
-/// `T` is a `Decodable`.
-/// - Parameter data: The data that has to be decoded.
-func decodeJSON<T: Decodable>(data: Data) -> T {
-    let decoder = JSONDecoder()
+/// A function to create an entry into the CoreData data store for a new user.
+/// - Parameters:
+///     - username: Username.
+///     - userData: The decoded data received from the server.
+func createNewUserInCoreData(username: String, userData: UserData) {
+    // Insert this new user into the persistent store.
+    guard let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
+        fatalError("[CreateUser] - Could not access managed object context.")
+    }
     
+    // Attempt to insert this new user into the store.
+    guard let newUser = NSEntityDescription.insertNewObject(forEntityName: "User", into: managedObjectContext) as? UserMO else {
+        fatalError("[CreateUser] - Could not create a new user record.")
+    }
+    
+    // Set the properties of the new user.
+    newUser.username = username
+    newUser.firstName = userData.firstName
+    newUser.lastName = userData.lastName
+    newUser.email = userData.email
+    newUser.lastLogin = userData.lastLogin
+    
+    // Attempt to create a new session entry into the store.
+    guard let newSession = NSEntityDescription.insertNewObject(forEntityName: "Session", into: managedObjectContext) as? SessionMO else {
+        fatalError("[CreateUser] - Could not create a new session.")
+    }
+    
+    // Set session related information.
+    newSession.sessionID = userData.sessionID
+    newSession.sessionExpiryDate = userData.serialisedSessionExpiryDate
+    
+    // Enter the relationship information.
+    newUser.session = newSession
+    newSession.user = newUser
+    
+    // Try to save all of the information.
     do {
-        return try decoder.decode(T.self, from: data)
+        try managedObjectContext.save()
     }
     catch {
-        fatalError("Could not decode data as \(T.self).")
+        fatalError("[CreateUser] - Could not save information.")
     }
-}
-
-/// A utility function that performs a data task using `URLSession.shared`.
-/// - Parameters:
-///     - _: A `URLRequest` object that has the required configuration.
-///     - completionHandler: The task to perform after the data task is completed.
-func dataTaskWithURLRequest(_ urlRequest: URLRequest,
-                            completionHandler: @escaping (Data, HTTPURLResponse, Error?) -> Void) {
-    URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-        guard error == nil,
-            let data = data,
-            let response = response as? HTTPURLResponse
-            else {
-                return
-        }
-        
-        completionHandler(data, response, error)
-    }.resume()
 }
 
 /// A class that manages all of the user's information sent and received from the server.
@@ -42,7 +57,7 @@ final class UserSession: ObservableObject {
     @Published var lastLogin: String = ""
     // Session information.
     @Published var sessionID: String = ""
-    @Published var sessionExpiryDate: String = ""
+    @Published var sessionExpiryDate: Date = Date()
     @Published var status: UserSession.HTTPStatus = .unknown
     
     /// Function for logging in the user.
@@ -74,7 +89,53 @@ final class UserSession: ObservableObject {
             // Login was successful.
             case 200:
                 // Decode the data sent from the server
-                let userData: UserData = decodeJSON(data: data)
+                var userData: UserData = decodeJSON(data: data)
+                
+                // Update the user's last login date and session expiry date.
+                // Get the managed object context.
+                guard let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
+                    fatalError("[Login] - Could not get managed object context.")
+                }
+                
+                // Fetch information of this user.
+                let userFetchRequest: NSFetchRequest<UserMO> = NSFetchRequest(entityName: "User")
+                // Create a predicate.
+                userFetchRequest.predicate = NSPredicate(format: "username == %@", credentials.username)
+                
+                let userFetchResults: [UserMO]
+                // Fetch the results.
+                do {
+                    userFetchResults = try managedObjectContext.fetch(userFetchRequest)
+                }
+                catch {
+                    fatalError("[Login] - Could not fetch user.")
+                }
+                
+                // Make sure that there is just one user fetched.
+                if userFetchResults.count > 1 {
+                    fatalError("[Login] - Multiple users were fetched.")
+                }
+                else if userFetchResults.count == 1 {
+                    // Update the last login information.
+                    userFetchResults[0].lastLogin = userData.lastLogin
+                    
+                    // Update the session expiry date if it has changed.
+                    if userData.serialisedSessionExpiryDate != userFetchResults[0].session!.sessionExpiryDate {
+                        userFetchResults[0].session!.sessionExpiryDate = userData.serialisedSessionExpiryDate
+                    }
+                    
+                    // Save this information.
+                    do {
+                        try managedObjectContext.save()
+                    }
+                    catch {
+                        fatalError("[Login] - Could not save data.")
+                    }
+                }
+                else {
+                    createNewUserInCoreData(username: credentials.username, userData: userData)
+                    os_log(.info, log: .default, "[Login] - Created new user in database.")
+                }
                 
                 DispatchQueue.main.async {
                     // Set all the relevant information.
@@ -109,7 +170,7 @@ final class UserSession: ObservableObject {
     /// Function to logout the user.
     func logoutUser() {
         // Contruct the data that will be sent to the server.
-        let requestData: UserLogout = UserLogout(sessionID: self.sessionID)
+        let requestData = UserLogout(sessionID: self.sessionID)
         
         // Storage for the result of encoding.
         let encodedData: Data
@@ -147,7 +208,7 @@ final class UserSession: ObservableObject {
                     self.email = ""
                     self.lastLogin = ""
                     self.sessionID = ""
-                    self.sessionExpiryDate = ""
+                    self.sessionExpiryDate = Date()
                     self.status = .authorised
                 }
                 
@@ -189,7 +250,9 @@ final class UserSession: ObservableObject {
             // Signup was successful.
             case 200:
                 // Decode the data sent from the server
-                let userData: UserData = decodeJSON(data: data)
+                var userData: UserData = decodeJSON(data: data)
+                
+                createNewUserInCoreData(username: userCredentials.username, userData: userData)
                 
                 DispatchQueue.main.async {
                     // Set all the relevant information.
