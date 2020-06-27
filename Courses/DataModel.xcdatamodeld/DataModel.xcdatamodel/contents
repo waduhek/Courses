@@ -4,17 +4,28 @@
         <attribute name="sessionExpiryDate" optional="YES" attributeType="String"/>
         <attribute name="sessionID" optional="YES" attributeType="String"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="User" inverseName="session" inverseEntity="User"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="sessionID"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="User" representedClassName="UserMO" syncable="YES" codeGenerationType="class">
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="isTeacher" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="lastLogin" optional="YES" attributeType="String"/>
         <attribute name="lastName" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <relationship name="session" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Session" inverseName="user" inverseEntity="Session"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="username"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <elements>
         <element name="Session" positionX="-54" positionY="-9" width="128" height="88"/>
-        <element name="User" positionX="181.7890625" positionY="-54.06640625" width="128" height="133"/>
+        <element name="User" positionX="181.7890625" positionY="-54.06640625" width="128" height="148"/>
     </elements>
 </model>

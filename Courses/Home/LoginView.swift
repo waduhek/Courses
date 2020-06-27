@@ -25,6 +25,9 @@ struct LoginView: View {
     }
     // MARK: HACK: Really horrible method to hide the navigation bar. Change it ASAP.
     @State private var hideNavigationBar: Bool = true
+    // MARK: Field error states.
+    @State private var usernameError: Bool = false
+    @State private var passwordError: Bool = false
     
     var body: some View {
         GeometryReader { proxy in
@@ -57,6 +60,7 @@ struct LoginView: View {
                             // Username field.
                             TextFieldWithDivider(
                                 fieldValue: self.$username,
+                                showError: self.$usernameError,
                                 placeholder: "Username",
                                 image: Image(systemName: "person.fill"),
                                 textContentType: .username
@@ -64,9 +68,10 @@ struct LoginView: View {
                             
                             // Password field.
                             PasswordField(
-                                placeholder: "Password",
                                 password: self.$password,
                                 showPassword: self.$showPassword,
+                                showError: self.$passwordError,
+                                placeholder: "Password",
                                 passwordFieldType: .password
                             )
                         }
@@ -91,20 +96,16 @@ struct LoginView: View {
                                 // Check if either the username or password field is empty.
                                 if self.username.count == 0 || self.password.count == 0 {
                                     // Either of the fields is empty. Set an appropriate title.
-                                    self.alertTitle = "Empty Field."
+                                    self.alertTitle = "Empty Field(s)."
+                                    self.alertMessage = "Please enter your credentials."
                                     
-                                    // Check if both, username and password are empty.
-                                    if self.username.count == 0 && self.password.count == 0 {
-                                        self.alertMessage = "Please enter your username and password."
+                                    // Check if any of the username or password fields are empty.
+                                    if self.username.count == 0 {
+                                        self.usernameError = true
                                     }
-                                    // Only one of username and password is empty.
-                                    else {
-                                        if self.username.count == 0 {
-                                            self.alertMessage = "Please enter your username."
-                                        }
-                                        else if self.password.count == 0 {
-                                            self.alertMessage = "Please enter your password."
-                                        }
+                                    
+                                    if self.password.count == 0 {
+                                        self.passwordError = true
                                     }
                                     
                                     self.showAlert = true

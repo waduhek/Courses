@@ -66,6 +66,7 @@ func syncDataTaskWithURLRequest(_ urlRequest: URLRequest) -> (Data, HTTPURLRespo
 
 /// A utility function that returns a serialisable representation of a `Date` object.
 /// - Parameter _: The date object that has to be serialisable.
+/// - Returns: An RFC3339 representation of the date.
 func stringFromDate(_ date: Date) -> String {
     let iso8601Formatter = ISO8601DateFormatter()
     iso8601Formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -74,6 +75,8 @@ func stringFromDate(_ date: Date) -> String {
     return iso8601Formatter.string(from: date)
 }
 
+/// A utility function that converts an RFC3339 date string to a `Date` object.
+/// - Parameter _: An RFC3339 representation of date.
 func dateFromString(_ string: String) -> Date {
     let iso8601Formatter = ISO8601DateFormatter()
     iso8601Formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]

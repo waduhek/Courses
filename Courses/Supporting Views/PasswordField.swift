@@ -1,10 +1,15 @@
 import SwiftUI
 
 struct PasswordField: View {
-    var placeholder: String
     @Binding var password: String
     @Binding var showPassword: Bool
+    @Binding var showError: Bool
+    var placeholder: String
     var passwordFieldType: UITextContentType
+    var dividerColour: Color = .primary
+    var dividerHeight: CGFloat = 0.5
+    var dividerErrorColour: Color = .red
+    var dividerErrorHeight: CGFloat = 1
     
     var body: some View {
         VStack {
@@ -33,7 +38,13 @@ struct PasswordField: View {
             }
             .padding(.vertical, 2)
             
-            RectangleDivider()
+            RectangleDivider(
+                showError: self.$showError,
+                colour: self.dividerColour,
+                height: self.dividerHeight,
+                errorColour: self.dividerErrorColour,
+                errorHeight: self.dividerErrorHeight
+            )
                 .padding(.bottom, 8)
         }
     }
@@ -42,9 +53,10 @@ struct PasswordField: View {
 struct PasswordField_Previews: PreviewProvider {
     static var previews: some View {
         PasswordField(
-            placeholder: "Password",
             password: .constant("lorem"),
             showPassword: .constant(false),
+            showError: .constant(false),
+            placeholder: "Password",
             passwordFieldType: .password
         )
     }

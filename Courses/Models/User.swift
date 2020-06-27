@@ -4,7 +4,7 @@ import CoreData
 import UIKit.UIApplication
 import Combine
 
-/// A function to create an entry into the CoreData data store for a new user.
+/// A function to create an entry in CoreData data store for a new user.
 /// - Parameters:
 ///     - username: Username.
 ///     - userData: The decoded data received from the server.
@@ -25,6 +25,7 @@ func createNewUserInCoreData(username: String, userData: UserData) {
     newUser.lastName = userData.lastName
     newUser.email = userData.email
     newUser.lastLogin = userData.lastLogin
+    newUser.isTeacher = userData.isTeacher
     
     // Attempt to create a new session entry into the store.
     guard let newSession = NSEntityDescription.insertNewObject(forEntityName: "Session", into: managedObjectContext) as? SessionMO else {
@@ -55,6 +56,7 @@ final class UserSession: ObservableObject {
     @Published var lastName: String = ""
     @Published var email: String = ""
     @Published var lastLogin: String = ""
+    @Published var isTeacher: Bool = false
     // Session information.
     @Published var sessionID: String = ""
     @Published var sessionExpiryDate: Date = Date()
@@ -116,12 +118,13 @@ final class UserSession: ObservableObject {
                     fatalError("[Login] - Multiple users were fetched.")
                 }
                 else if userFetchResults.count == 1 {
+                    let user = userFetchResults[0]
                     // Update the last login information.
-                    userFetchResults[0].lastLogin = userData.lastLogin
+                    user.lastLogin = userData.lastLogin
                     
                     // Update the session expiry date if it has changed.
-                    if userData.serialisedSessionExpiryDate != userFetchResults[0].session!.sessionExpiryDate {
-                        userFetchResults[0].session!.sessionExpiryDate = userData.serialisedSessionExpiryDate
+                    if userData.serialisedSessionExpiryDate != user.session!.sessionExpiryDate {
+                        user.session!.sessionExpiryDate = userData.serialisedSessionExpiryDate
                     }
                     
                     // Save this information.

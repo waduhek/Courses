@@ -1,5 +1,4 @@
 // This file describes the structs used for requests and replies sent to and received from the server.
-import os.log
 import Foundation
 import CoreData
 import UIKit.UIApplication
@@ -14,21 +13,22 @@ struct UserCredentials: Encodable {
 /// This struct stores the represents the information the server sends back when the user successfully logs in.
 struct UserData: Decodable {
     // MARK: User information.
-    var firstName: String = ""
-    var lastName: String = ""
-    var email: String = ""
-    var lastLogin: String = ""
+    var firstName: String
+    var lastName: String
+    var email: String
+    var lastLogin: String
     // MARK: Session information.
-    var sessionID: String = ""
+    var sessionID: String
     // Received session expiry date in RFC 3339 format.
     // This is received from the server.
-    var serialisedSessionExpiryDate: String = ""
+    var serialisedSessionExpiryDate: String
+    var isTeacher: Bool
     
-    // MARK: Converting the session expiry date into a `Date` type.
+    // Converting the session expiry date into a `Date` type.
     lazy var sessionExpiryDate: Date = dateFromString(self.serialisedSessionExpiryDate)
     
     enum CodingKeys: String, CodingKey {
-        case firstName, lastName, email, lastLogin, sessionID
+        case firstName, lastName, email, lastLogin, sessionID, isTeacher
         
         case serialisedSessionExpiryDate = "sessionExpireDate"
     }
@@ -54,6 +54,7 @@ struct UserSignup: Encodable {
     var email: String
     var password: String
     var confirmPassword: String
+    var isTeacher: Bool
 }
 
 // MARK:- Validation related structs.

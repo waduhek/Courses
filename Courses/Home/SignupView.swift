@@ -20,6 +20,11 @@ struct SignupView: View {
     @State private var alertMessage: String = ""
     // MARK: Button related states.
     @State private var signupPressed: Bool = false
+    // MARK: Account type related states and variables.
+    @State private var accountTypeSelectionIndex: Int = 0
+    private var accountTypes: [String] {
+        return ["Student", "Teacher"]
+    }
     // MARK: Navigation related states and bindings.
     @State private var showHomeView: Int? = 0
     private var showLoading: Binding<Bool> {
@@ -28,6 +33,13 @@ struct SignupView: View {
             set: { _ in }
         )
     }
+    // MARK: Field error states.
+    @State private var usernameError: Bool = false
+    @State private var passwordError: Bool = false
+    @State private var confirmPasswordError: Bool = false
+    @State private var emailError: Bool = false
+    @State private var firstNameError: Bool = false
+    @State private var lastNameError: Bool = false
     
     var body: some View {
         LoadingView(
@@ -61,6 +73,7 @@ struct SignupView: View {
                     // Username field.
                     TextFieldWithDivider(
                         fieldValue: self.$username,
+                        showError: self.$usernameError,
                         placeholder: "Username",
                         image: Image(systemName: "person.fill"),
                         textContentType: .username
@@ -69,6 +82,7 @@ struct SignupView: View {
                     // Email field.
                     TextFieldWithDivider(
                         fieldValue: self.$email,
+                        showError: self.$emailError,
                         placeholder: "Email",
                         image: Image(systemName: "envelope.fill"),
                         textContentType: .emailAddress,
@@ -77,23 +91,26 @@ struct SignupView: View {
                     
                     // New password field.
                     PasswordField(
-                        placeholder: "Password",
                         password: self.$password,
                         showPassword: self.$showPassword,
+                        showError: self.$passwordError,
+                        placeholder: "Password",
                         passwordFieldType: .newPassword
                     )
                     
                     // Confirm password field.
                     PasswordField(
-                        placeholder: "Confirm Password",
                         password: self.$confirmPassword,
                         showPassword: self.$showConfirmPassword,
-                        passwordFieldType: .newPassword
+                        showError: self.$confirmPasswordError,
+                        placeholder: "Confirm Password",
+                        passwordFieldType: .password
                     )
                     
                     // First name field.
                     TextFieldWithDivider(
                         fieldValue: self.$firstName,
+                        showError: self.$firstNameError,
                         placeholder: "First Name",
                         image: Image(systemName: "person.fill"),
                         textContentType: .name
@@ -102,10 +119,22 @@ struct SignupView: View {
                     // Last name field.
                     TextFieldWithDivider(
                         fieldValue: self.$lastName,
+                        showError: self.$lastNameError,
                         placeholder: "Last Name",
                         image: Image(systemName: "person.fill"),
                         textContentType: .familyName
                     )
+                    
+                    // Account type picker.
+                    VStack(alignment: .leading) {
+                        Text("Register as")
+                        Picker(selection: self.$accountTypeSelectionIndex, label: Text("Account Type")) {
+                            ForEach(0..<self.accountTypes.count) { i in
+                                Text(self.accountTypes[i]).tag(i)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
                     
                     // Hidden navigation link.
                     NavigationLink(
@@ -126,36 +155,35 @@ struct SignupView: View {
                                 self.confirmPassword.count == 0  || self.email.count == 0 ||
                                 self.firstName.count == 0 || self.lastName.count == 0) {
                                 
-                                self.alertTitle = "Empty field."
+                                self.alertTitle = "Empty field(s)."
+                                self.alertMessage = "Please fill in the empty fields."
                                 
                                 // Check if the username field is filled in
                                 if self.username.count == 0 {
-                                    self.alertMessage = "Username field is empty."
+                                    self.usernameError = true
                                 }
-                                // Check if either of the password fields are empty.
-                                else if self.password.count == 0 || self.confirmPassword.count == 0 {
-                                    
-                                    // Check which field is empty.
-                                    if self.password.count == 0 {
-                                        self.alertMessage = "Please enter a password."
-                                    }
-                                    else {
-                                        self.alertMessage = "Please confirm your password."
-                                    }
+                                
+                                // Check which field is empty.
+                                if self.password.count == 0 {
+                                    self.passwordError = true
                                 }
+                                
+                                if self.confirmPassword.count == 0 {
+                                    self.confirmPasswordError = true
+                                }
+                                
                                 // Check if email field is empty.
-                                else if self.email.count == 0 {
-                                    self.alertMessage = "Please enter your email address."
+                                if self.email.count == 0 {
+                                    self.emailError = true
                                 }
-                                // Check if name fields are empty.
-                                else if self.firstName.count == 0 || self.lastName.count == 0 {
-                                    // Check if first name field is empty.
-                                    if self.firstName.count == 0 {
-                                        self.alertMessage = "Please enter your first name."
-                                    }
-                                    else {
-                                        self.alertMessage = "Please enter your last name."
-                                    }
+                                
+                                // Check if first name field is empty.
+                                if self.firstName.count == 0 {
+                                    self.firstNameError = true
+                                }
+                                    
+                                if self.lastName.count == 0 {
+                                    self.lastNameError = true
                                 }
                                 
                                 self.showAlert = true
@@ -171,10 +199,20 @@ struct SignupView: View {
                                 // Signal that the button is tapped.
                                 self.signupPressed = true
                                 
+                                var isTeacher: Bool {
+                                    if self.accountTypes[self.accountTypeSelectionIndex].lowercased() == "teacher" {
+                                        return true
+                                    }
+                                    else {
+                                        return false
+                                    }
+                                }
+                                
                                 let userCredentials = UserSignup(
                                     firstName: self.firstName, lastName: self.lastName,
                                     username: self.username, email: self.email,
-                                    password: self.password, confirmPassword: self.confirmPassword
+                                    password: self.password, confirmPassword: self.confirmPassword,
+                                    isTeacher: isTeacher
                                 )
                                 
                                 self.userSession.signupUser(userCredentials: userCredentials)
@@ -190,7 +228,7 @@ struct SignupView: View {
                     }
                     .padding(.bottom, 15)
                 }
-                .padding(.horizontal)
+                .padding(.all)
                 .navigationBarTitle("Sign Up")
                 .navigationBarHidden(self.hideNavigationBar)
                 .onAppear {
