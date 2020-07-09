@@ -94,42 +94,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             default:
                 fatalError("[SceneDelegate] - Unexpected status code.")
             }
-            
-            // Perform the data task.
-//            dataTaskWithURLRequest(urlRequest) { (data, response, error) in
-//                switch response.statusCode {
-//                // The current session is already active.
-//                case 200:
-//                    let responseBody: ValidateSessionResponse = decodeJSON(data: data)
-//
-//                    DispatchQueue.main.sync {
-//                        userSession.firstName = result.user!.firstName!
-//                        userSession.lastName = result.user!.lastName!
-//                        userSession.email = result.user!.email!
-//                        userSession.lastLogin = result.user!.lastLogin!
-//                        userSession.sessionID = result.sessionID!
-//                        userSession.sessionExpiryDate = dateFromString(responseBody.serialisedSessionExpiryDate)
-//                    }
-//
-//                    // Check if the session expiry dates match. Update if they do not.
-//                    if responseBody.serialisedSessionExpiryDate != result.sessionExpiryDate! {
-//                        result.sessionExpiryDate = responseBody.serialisedSessionExpiryDate
-//
-//                        // Save the data.
-//                        do {
-//                            try managedObjectContext.save()
-//                        }
-//                        catch {
-//                            fatalError("[SceneDelegate] - Could not update session expiry date.")
-//                        }
-//                    }
-//                // The current session is inactive or the session ID is incorrect.
-//                case 401:
-//                    break
-//                default:
-//                    fatalError("[SceneDelegate] - Unexpected status code.")
-//                }
-//            }
         }
         else if fetchResults.count == 0 {
             os_log(.info, log: .default, "[SceneDelegate] - No session IDs were found.")

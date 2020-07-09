@@ -14,9 +14,8 @@ struct LoginView: View {
     @State private var showAlert: Bool = false
     @State private var alertTitle: String = ""
     @State private var alertMessage: String = ""
-    /* This binding is used to display the loading view when the login button
-     * is pressed and the status of the request is `unknown`.
-    */
+    // This binding is used to display the loading view when the login button
+    // is pressed and the status of the request is `unknown`.
     private var showLoading: Binding<Bool> {
         Binding(
             get: { (self.userSession.status == .unknown) && self.loginPressed },
@@ -82,7 +81,7 @@ struct LoginView: View {
                          * triggered when `showHomeView` becomes 1.
                         */
                         NavigationLink(
-                            destination: HomeView(hideNavigationBar: self.$hideNavigationBar),
+                            destination: AllCourses() /*HomeView(hideNavigationBar: self.$hideNavigationBar)*/,
                             tag: 1,
                             selection: self.$showHomeView
                         ) {

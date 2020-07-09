@@ -1,9 +1,18 @@
 import SwiftUI
 
-struct LoadingView<Content : View>: View {
+struct LoadingView<Content: View>: View {
     @Binding var showLoading: Bool
     var onDisappearHandler: () -> Void
     var content: () -> Content
+    
+    init(showLoading: Binding<Bool>,
+         onDisappearHandler: @escaping () -> Void,
+         @ViewBuilder content: @escaping () -> Content
+    ) {
+        self._showLoading = showLoading
+        self.onDisappearHandler = onDisappearHandler
+        self.content = content
+    }
     
     var body: some View {
         GeometryReader { proxy in
@@ -17,8 +26,7 @@ struct LoadingView<Content : View>: View {
                         .background(
                             Color(red: 182 / 255, green: 182 / 255, blue: 182 / 255)
                         )
-                        .opacity(self.showLoading ? 0.2 : 0)
-                        .foregroundColor(Color.primary)
+                        .opacity(self.showLoading ? 0.5 : 0)
                         .onDisappear(perform: self.onDisappearHandler)
                 }
             }
