@@ -3,14 +3,17 @@ import Foundation
 import CoreData
 import SwiftUI
 
+// MARK: Temporary code.
+let courses: [Course] = decodeFromFile("Sample.json")
+
 // MARK: - Login related structs.
-/// This struct represents the information sent to the server when a user requests a log in or when the user wants to sign up.
+/// Represents the information sent to the server when a user requests a log in or when the user wants to sign up.
 struct UserCredentials: Encodable {
     var username: String
     var password: String
 }
 
-/// This struct stores the represents the information the server sends back when the user successfully logs in.
+/// Stores the information the server sends back when the user successfully logs in.
 struct UserData: Decodable {
     // MARK: User information.
     var firstName: String
@@ -35,7 +38,7 @@ struct UserData: Decodable {
 }
 
 // MARK: - Logout related structs.
-/// This struct is used when the user wants to log out.
+/// Used when the user wants to log out.
 struct UserLogout: Encodable {
     var sessionID: String
 }
@@ -46,7 +49,7 @@ struct UserLogoutResponse: Decodable {
 }
 
 // MARK: - Signup related structs.
-/// This struct represents the data sent to the server when the user wants to sign up.
+/// Represents the data sent to the server when the user wants to sign up.
 struct UserSignup: Encodable {
     var firstName: String
     var lastName: String
@@ -58,7 +61,7 @@ struct UserSignup: Encodable {
 }
 
 // MARK: - Validation related structs.
-/// This struct represents the data sent to the server for validation of session.
+/// Represents the data sent to the server for validation of session.
 struct ValidateSession: Encodable {
     var username: String
     var sessionID: String
@@ -70,7 +73,7 @@ struct ValidateSession: Encodable {
     }
 }
 
-/// This struct represents the data received from the server after a validation request.
+/// Represents the data received from the server after a validation request.
 struct ValidateSessionResponse: Decodable {
     var firstName: String
     var lastName: String
@@ -87,28 +90,43 @@ struct ValidateSessionResponse: Decodable {
 
 // MARK: - Course related structs.
 
-/// This struct stores the information and image of a single course.
+/// Stores minimal information of a course. This is for use in
+/// non detail views.
+struct CourseSummary: Decodable, Identifiable {
+    var id: UInt
+    var name: String
+    var imageURL: String
+    
+    var image: Image {
+        loadImage(fromURL: self.imageURL)
+    }
+}
+
+/// Stores detail information of a course.
 struct Course: Decodable, Identifiable {
     var id: UInt
     var name: String
     var description: String
-    var imageURL: String
+    var teachers: [String]
+    var videos: [CourseVideo]
+    private var imageURL: String
+    
     var image: Image {
-        let (data, response, _) = syncDataTaskWithURLRequest(
-            URLRequest(url: URL(string: imageURL)!)
-        )
-        
-        switch response.statusCode {
-        case 200:
-            return Image(uiImage: UIImage(data: data)!)
-        default:
-            fatalError("[Course/Single] - Image could not be found.")
-        }
-            
+        loadImage(fromURL: self.imageURL)
+    }
+    
+    init() {
+        self.id = 0
+        self.name = ""
+        self.description = ""
+        self.teachers = []
+        self.videos = []
+        // Set the image URL to the default image URL.
+        self.imageURL = "http://192.168.1.127:8080/short/f38e60deaac74a7/"
     }
     
     enum CodingKeys: String, CodingKey {
-        case id, name, description
+        case id, name, description, teachers, videos
         case imageURL = "image"
     }
 }
@@ -117,12 +135,12 @@ struct CourseVideo: Decodable, Identifiable {
     var id: UInt
     var title: String
     var description: String
-    var duration: UInt
+    var url: String
     var dateUploadedString: String
     lazy var dateUploaded: Date = dateFromString(self.dateUploadedString)
     
     enum CodingKeys: String, CodingKey {
-        case id, title, description, duration
+        case id, title, description, url
         case dateUploadedString = "dateUploaded"
     }
 }

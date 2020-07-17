@@ -38,7 +38,7 @@ struct HomeView: View {
                 Spacer()
                 
                 NavigationLink(
-                    destination: LoginView(),
+                    destination: LoginView(hideNavigationBar: self.$hideNavigationBar),
                     tag: 1,
                     selection: self.$showLoginView
                 ) {

@@ -4,51 +4,6 @@ import CoreData
 import UIKit.UIApplication
 import Combine
 
-/// A function to create an entry in CoreData data store for a new user.
-/// - Parameters:
-///     - username: Username.
-///     - userData: The decoded data received from the server.
-func createNewUserInCoreData(username: String, userData: UserData) {
-    // Insert this new user into the persistent store.
-    guard let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
-        fatalError("[CreateUser] - Could not access managed object context.")
-    }
-    
-    // Attempt to insert this new user into the store.
-    guard let newUser = NSEntityDescription.insertNewObject(forEntityName: "User", into: managedObjectContext) as? UserMO else {
-        fatalError("[CreateUser] - Could not create a new user record.")
-    }
-    
-    // Set the properties of the new user.
-    newUser.username = username
-    newUser.firstName = userData.firstName
-    newUser.lastName = userData.lastName
-    newUser.email = userData.email
-    newUser.lastLogin = userData.lastLogin
-    newUser.isTeacher = userData.isTeacher
-    
-    // Attempt to create a new session entry into the store.
-    guard let newSession = NSEntityDescription.insertNewObject(forEntityName: "Session", into: managedObjectContext) as? SessionMO else {
-        fatalError("[CreateUser] - Could not create a new session.")
-    }
-    
-    // Set session related information.
-    newSession.sessionID = userData.sessionID
-    newSession.sessionExpiryDate = userData.serialisedSessionExpiryDate
-    
-    // Enter the relationship information.
-    newUser.session = newSession
-    newSession.user = newUser
-    
-    // Try to save all of the information.
-    do {
-        try managedObjectContext.save()
-    }
-    catch {
-        fatalError("[CreateUser] - Could not save information.")
-    }
-}
-
 /// A class that manages all of the user's information sent and received from the server.
 final class UserSession: ObservableObject {
     // User information.
@@ -92,26 +47,9 @@ final class UserSession: ObservableObject {
             case 200:
                 // Decode the data sent from the server
                 var userData: UserData = decodeJSON(data: data)
+                let courseProvider = UserProvider()
                 
-                // Update the user's last login date and session expiry date.
-                // Get the managed object context.
-                guard let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
-                    fatalError("[Login] - Could not get managed object context.")
-                }
-                
-                // Fetch information of this user.
-                let userFetchRequest: NSFetchRequest<UserMO> = NSFetchRequest(entityName: "User")
-                // Create a predicate.
-                userFetchRequest.predicate = NSPredicate(format: "username == %@", credentials.username)
-                
-                let userFetchResults: [UserMO]
-                // Fetch the results.
-                do {
-                    userFetchResults = try managedObjectContext.fetch(userFetchRequest)
-                }
-                catch {
-                    fatalError("[Login] - Could not fetch user.")
-                }
+                let userFetchResults = courseProvider.fetchUsers(username: credentials.username)
                 
                 // Make sure that there is just one user fetched.
                 if userFetchResults.count > 1 {
@@ -119,24 +57,12 @@ final class UserSession: ObservableObject {
                 }
                 else if userFetchResults.count == 1 {
                     let user = userFetchResults[0]
-                    // Update the last login information.
-                    user.lastLogin = userData.lastLogin
                     
-                    // Update the session expiry date if it has changed.
-                    if userData.serialisedSessionExpiryDate != user.session!.sessionExpiryDate {
-                        user.session!.sessionExpiryDate = userData.serialisedSessionExpiryDate
-                    }
-                    
-                    // Save this information.
-                    do {
-                        try managedObjectContext.save()
-                    }
-                    catch {
-                        fatalError("[Login] - Could not save data.")
-                    }
+                    // Update the last login and session expiry date information.
+                    courseProvider.updateUserInformationOnLogin(user: user, userData: userData)
                 }
                 else {
-                    createNewUserInCoreData(username: credentials.username, userData: userData)
+                    courseProvider.createNewUser(username: credentials.username, userData: userData)
                     os_log(.info, log: .default, "[Login] - Created new user in database.")
                 }
                 
@@ -230,6 +156,7 @@ final class UserSession: ObservableObject {
     /// - Parameter userCredentials: A `UserCredentials` object. This function expects all the fields to be set.
     func signupUser(userCredentials: UserSignup) {
         let encodedData: Data
+        let courseProvider = UserProvider()
         
         do {
             encodedData = try JSONEncoder().encode(userCredentials)
@@ -255,7 +182,7 @@ final class UserSession: ObservableObject {
                 // Decode the data sent from the server
                 var userData: UserData = decodeJSON(data: data)
                 
-                createNewUserInCoreData(username: userCredentials.username, userData: userData)
+                courseProvider.createNewUser(username: userCredentials.username, userData: userData)
                 
                 DispatchQueue.main.async {
                     // Set all the relevant information.

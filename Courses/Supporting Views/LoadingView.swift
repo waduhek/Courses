@@ -26,7 +26,7 @@ struct LoadingView<Content: View>: View {
                         .background(
                             Color(red: 182 / 255, green: 182 / 255, blue: 182 / 255)
                         )
-                        .opacity(self.showLoading ? 0.5 : 0)
+                        .opacity(self.showLoading ? 0.3 : 0)
                         .onDisappear(perform: self.onDisappearHandler)
                 }
             }

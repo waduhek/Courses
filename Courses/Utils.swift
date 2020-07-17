@@ -1,6 +1,7 @@
 // This file defines all utility functions used in this project.
 
 import Foundation
+import SwiftUI
 
 /// Function to decode a `Data` object to a generic type `T` where
 /// `T` is a `Decodable`.
@@ -87,4 +88,41 @@ func dateFromString(_ string: String) -> Date {
     }
     
     return date
+}
+
+func decodeFromFile<T: Decodable>(_ filename: String) -> T {
+    guard let fileURL = Bundle.main.url(forResource: filename, withExtension: nil) else {
+        fatalError("[Utils/DecodeFromFile] - Couldn't find file \(filename).")
+    }
+    
+    let data: Data
+    do {
+        data = try Data(contentsOf: fileURL)
+    }
+    catch {
+        fatalError("[Utils/DecodeFromFile] - Couldn't load data from file \(filename).\n\(error)")
+    }
+    
+    let returnVal: T = decodeJSON(data: data)
+    
+    return returnVal
+}
+
+/// A utility function to load an image from a URL.
+/// - Parameter fromURL: The URL of the image as a `String`
+/// - Returns: An `Image` object of the image as received from the server.
+func loadImage(fromURL url: String) -> Image {
+    let (data, response, _) = syncDataTaskWithURLRequest(
+        URLRequest(url: URL(string: url)!)
+    )
+    
+    switch response.statusCode {
+    case 200:
+        guard let uiImage = UIImage(data: data) else {
+            fatalError("[DS/Course] - Could not create `UIImage` object from `Data`.")
+        }
+        return Image(uiImage: uiImage)
+    default:
+        fatalError("[DS/Course] - Image could not be found.")
+    }
 }

@@ -5,7 +5,10 @@ struct ActivityIndicator: UIViewRepresentable {
     var activityIndicatorStyle: UIActivityIndicatorView.Style
     
     func makeUIView(context: Context) -> UIActivityIndicatorView {
-        return UIActivityIndicatorView(style: self.activityIndicatorStyle)
+        let activityIndicator = UIActivityIndicatorView(style: self.activityIndicatorStyle)
+        activityIndicator.hidesWhenStopped = true
+        
+        return activityIndicator
     }
     
     func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
