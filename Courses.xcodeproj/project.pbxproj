@@ -10,10 +10,11 @@
 		811028CB24ACBD62000B09A4 /* CourseRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811028CA24ACBD62000B09A4 /* CourseRow.swift */; };
 		811C62FB248B77C900020F7D /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C62FA248B77C900020F7D /* PasswordField.swift */; };
 		811C62FD248B79BF00020F7D /* TextFieldWithDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */; };
-		811C6303248BED5B00020F7D /* Courses.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 811C6301248BED5B00020F7D /* Courses.xcdatamodeld */; };
 		8127FEE124AA3F3C00E70831 /* CourseDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8127FEE024AA3F3C00E70831 /* CourseDetail.swift */; };
 		812D503624A12CBE00F85594 /* Teacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 812D503524A12CBE00F85594 /* Teacher.swift */; };
 		813F2B542471BD2800E07F86 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813F2B532471BD2800E07F86 /* SignupView.swift */; };
+		81403B5224C30ED4006D5463 /* ValidatorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81403B5124C30ED4006D5463 /* ValidatorProvider.swift */; };
+		81403B5524C31D8B006D5463 /* Courses.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 81403B5324C31D8B006D5463 /* Courses.xcdatamodeld */; };
 		814520A3248E59E4000A1580 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 814520A2248E59E4000A1580 /* LICENSE */; };
 		81473CBC24C1B9CE004C18DC /* CourseDetailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81473CBB24C1B9CE004C18DC /* CourseDetailProvider.swift */; };
 		814E28CD24B5A74900D8A58F /* AllCourses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814E28CC24B5A74900D8A58F /* AllCourses.swift */; };
@@ -51,10 +52,11 @@
 		811028CA24ACBD62000B09A4 /* CourseRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseRow.swift; sourceTree = "<group>"; };
 		811C62FA248B77C900020F7D /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 		811C62FC248B79BF00020F7D /* TextFieldWithDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithDivider.swift; sourceTree = "<group>"; };
-		811C6302248BED5B00020F7D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		8127FEE024AA3F3C00E70831 /* CourseDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetail.swift; sourceTree = "<group>"; };
 		812D503524A12CBE00F85594 /* Teacher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Teacher.swift; sourceTree = "<group>"; };
 		813F2B532471BD2800E07F86 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		81403B5124C30ED4006D5463 /* ValidatorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidatorProvider.swift; sourceTree = "<group>"; };
+		81403B5424C31D8B006D5463 /* Courses.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Courses.xcdatamodel; sourceTree = "<group>"; };
 		814520A2248E59E4000A1580 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		81473CBB24C1B9CE004C18DC /* CourseDetailProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailProvider.swift; sourceTree = "<group>"; };
 		814E28CC24B5A74900D8A58F /* AllCourses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCourses.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				81C42EF524C074E800E9A2BF /* UserProvider.swift */,
+				81403B5124C30ED4006D5463 /* ValidatorProvider.swift */,
 				81473CBB24C1B9CE004C18DC /* CourseDetailProvider.swift */,
 			);
 			path = Providers;
@@ -178,11 +181,11 @@
 				81FF3AA6246DAE1A007DA05B /* Supporting Views */,
 				8165359C2496389E005CE56E /* Utils.swift */,
 				81B989BC24C07C1D00063B4D /* Sample.json */,
+				81403B5324C31D8B006D5463 /* Courses.xcdatamodeld */,
 				81C9CD2224697D1600CBCBB5 /* Assets.xcassets */,
 				81C9CD2724697D1600CBCBB5 /* LaunchScreen.storyboard */,
 				81C9CD2A24697D1600CBCBB5 /* Info.plist */,
 				81C9CD2424697D1600CBCBB5 /* Preview Content */,
-				811C6301248BED5B00020F7D /* Courses.xcdatamodeld */,
 			);
 			path = Courses;
 			sourceTree = "<group>";
@@ -341,8 +344,10 @@
 				81C9CD1D24697D1100CBCBB5 /* AppDelegate.swift in Sources */,
 				81DB050E24A632EA00F9E849 /* ActivityIndicator.swift in Sources */,
 				811C62FB248B77C900020F7D /* PasswordField.swift in Sources */,
+				81403B5524C31D8B006D5463 /* Courses.xcdatamodeld in Sources */,
 				81473CBC24C1B9CE004C18DC /* CourseDetailProvider.swift in Sources */,
 				8127FEE124AA3F3C00E70831 /* CourseDetail.swift in Sources */,
+				81403B5224C30ED4006D5463 /* ValidatorProvider.swift in Sources */,
 				819C6CE324BA22A30063BAF8 /* AppRootView.swift in Sources */,
 				81C9CD1F24697D1100CBCBB5 /* SceneDelegate.swift in Sources */,
 				8165359D2496389E005CE56E /* Utils.swift in Sources */,
@@ -356,7 +361,6 @@
 				81FF3AA5246D6485007DA05B /* User.swift in Sources */,
 				81AB571D24826A9A00877591 /* LoadingView.swift in Sources */,
 				813F2B542471BD2800E07F86 /* SignupView.swift in Sources */,
-				811C6303248BED5B00020F7D /* Courses.xcdatamodeld in Sources */,
 				81C9CD2124697D1100CBCBB5 /* LoginView.swift in Sources */,
 				81C42EF624C074E800E9A2BF /* UserProvider.swift in Sources */,
 			);
@@ -623,12 +627,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		811C6301248BED5B00020F7D /* Courses.xcdatamodeld */ = {
+		81403B5324C31D8B006D5463 /* Courses.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				811C6302248BED5B00020F7D /* DataModel.xcdatamodel */,
+				81403B5424C31D8B006D5463 /* Courses.xcdatamodel */,
 			);
-			currentVersion = 811C6302248BED5B00020F7D /* DataModel.xcdatamodel */;
+			currentVersion = 81403B5424C31D8B006D5463 /* Courses.xcdatamodel */;
 			path = Courses.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -31,7 +31,6 @@ final class CourseDetailProvider: ObservableObject {
                 DispatchQueue.main.async {
                     self.course = decodeJSON(data: data)
                 }
-                print("\(self.course.videos.count)")
 
                 // Indicate end of loading.
                 DispatchQueue.main.async {

@@ -3,14 +3,25 @@
 import Foundation
 import SwiftUI
 
-/// Function to decode a `Data` object to a generic type `T` where
+/// Decodes a `Data` object to a generic type `T` where
 /// `T` is a `Decodable`.
 /// - Parameter data: The data that has to be decoded.
 func decodeJSON<T: Decodable>(data: Data) -> T {
-    let decoder = JSONDecoder()
-    
     do {
-        return try decoder.decode(T.self, from: data)
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+    catch {
+        fatalError("Could not decode data as \(T.self).")
+    }
+}
+
+/// Decodes a `Data` object to a generic type `T` when `T` is a `Decodable`.
+/// - Parameters:
+///     - type: Type  to be decoded to.
+///     - data: The data that has to be decoded.
+func decodeJSON<T: Decodable>(_ type: T.Type, data: Data) -> T {
+    do {
+        return try JSONDecoder().decode(type.self, from: data)
     }
     catch {
         fatalError("Could not decode data as \(T.self).")

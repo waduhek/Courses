@@ -3,9 +3,6 @@ import Foundation
 import CoreData
 import SwiftUI
 
-// MARK: Temporary code.
-let courses: [Course] = decodeFromFile("Sample.json")
-
 // MARK: - Login related structs.
 /// Represents the information sent to the server when a user requests a log in or when the user wants to sign up.
 struct UserCredentials: Encodable {

@@ -1,13 +1,13 @@
 import CoreData
 
-class UserProvider {
+final class UserProvider {
     /// Storage for a shared persistent container instance.
-    lazy var persistentContainer: NSPersistentContainer = {
+    private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Courses")
         
         container.loadPersistentStores { (storeDescription, error) in
             guard error == nil else {
-                fatalError("[CourseProvider] - Unresolved error: \(error!)")
+                fatalError("[UserProvider] - Unresolved error: \(error!)")
             }
         }
         
@@ -25,19 +25,21 @@ class UserProvider {
     /// Fetches the user with the given username.
     /// - Parameter username: The username of the user. It will be used as a
     ///     predicate for search.
-    /// - Returns: Array of all matching users (ideally 1).
+    /// - Returns: Array of all matching users (Ideally 1).
     func fetchUsers(username: String) -> [UserMO] {
         let context = self.newTaskContext()
         
         let fetchRequest: NSFetchRequest<UserMO> = NSFetchRequest(entityName: "User")
         fetchRequest.predicate = NSPredicate(format: "username == %@", username)
+        // Stop CoreData from returning objects as faults on execution.
+        fetchRequest.returnsObjectsAsFaults = false
         
         let fetchResults: [UserMO]
         do {
             fetchResults = try context.fetch(fetchRequest)
         }
         catch {
-            fatalError("[CourseProvider/FetchUser] - Could not fetch user: \(error)")
+            fatalError("[UserProvider/FetchUser] - Could not fetch users: \(error)")
         }
         
         return fetchResults
@@ -64,7 +66,7 @@ class UserProvider {
             try context.save()
         }
         catch {
-            fatalError("[CourseProvider/UpdateUserOnLogin] - Could not save data.")
+            fatalError("[UserProvider/UpdateUserOnLogin] - Could not save data.")
         }
     }
     
@@ -77,7 +79,7 @@ class UserProvider {
         
         // Attempt to insert this new user into the store.
         guard let newUser = NSEntityDescription.insertNewObject(forEntityName: "User", into: context) as? UserMO else {
-            fatalError("[CourseProvider/CreateUser] - Could not create a new user record.")
+            fatalError("[UserProvider/CreateUser] - Could not create a new user record.")
         }
         
         // Set the properties of the new user.
@@ -90,7 +92,7 @@ class UserProvider {
         
         // Attempt to create a new session entry into the store.
         guard let newSession = NSEntityDescription.insertNewObject(forEntityName: "Session", into: context) as? SessionMO else {
-            fatalError("[CourseProvider/CreateUser] - Could not create a new session.")
+            fatalError("[UserProvider/CreateUser] - Could not create a new session.")
         }
         
         // Set session related information.
@@ -106,7 +108,7 @@ class UserProvider {
             try context.save()
         }
         catch {
-            fatalError("[CourseProvider/CreateUser] - Could not save information.")
+            fatalError("[UserProvider/CreateUser] - Could not save information.")
         }
     }
 }
