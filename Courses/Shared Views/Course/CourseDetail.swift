@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct CourseDetail: View {
+    @EnvironmentObject var userSession: UserSession
     @ObservedObject var courseProvider: CourseDetailProvider
     @Binding var hideNavigationBar: Bool
+    @State private var truncateDescription: Bool = true
     
     private var isLoading: Binding<Bool> {
         Binding(
@@ -12,81 +14,99 @@ struct CourseDetail: View {
     }
     
     var body: some View {
-        GeometryReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading) {
-                    // Header for this course.
-                    HStack(alignment: .top) {
-                        // Course detail image.
-                        self.courseProvider.course.image
-                            .resizable()
-                            .frame(
-                                width: proxy.size.width * 0.33,
-                                height: proxy.size.width * 0.33
-                            )
-                            .shadow(radius: 5)
-                            .padding(.trailing)
-                    
+        LoadingView(showLoading: self.isLoading, onDisappearHandler: {}) {
+            GeometryReader { proxy in
+                List {
+                    // Course header.
+                    Section {
+                        HStack(alignment: .top) {
+                            // Course detail image.
+                            self.courseProvider.course.image
+                                .resizable()
+                                .renderingMode(.original)
+                                .frame(
+                                    width: proxy.size.width * 0.33,
+                                    height: proxy.size.width * 0.33
+                                )
+                                .shadow(radius: 5)
+                                .padding(.trailing)
                         
-                        // Course title and professor name.
-                        VStack(alignment: .leading) {
-                            Text(self.courseProvider.course.name)
-                                .font(.headline)
-                                .padding(.bottom, proxy.size.width * 0.1)
-                                .lineLimit(3)
-                                .truncationMode(.tail)
-                    
-                            Text(self.courseProvider.course.teachers.first ?? "")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                            
+                            // Course title and professor name.
+                            VStack(alignment: .leading) {
+                                Text(self.courseProvider.course.name)
+                                    .font(.headline)
+                                    .padding(.bottom, proxy.size.width * 0.1)
+                                    .lineLimit(3)
+                                    .truncationMode(.tail)
+                        
+                                Text(self.courseProvider.course.teachers.first ?? "")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                        .padding(.vertical)
                     }
-                    .padding()
                     
-                    Group {
-                        Text("Videos")
+                    // Course description.
+                    Section(
+                        header: Text("Description")
                             .font(.caption)
-                            .frame(width: UIScreen.main.bounds.width, alignment: .leading)
-                            .background(Color.gray.opacity(0.4))
+                    ) {
+                        HStack(alignment: .center) {
+                            Text(self.courseProvider.course.description)
+                                .lineLimit(self.truncateDescription ? 1 : nil)
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .center) {
+                                Image(systemName: "chevron.up")
+                                    .foregroundColor(.gray)
+                                    .rotationEffect(self.truncateDescription ? Angle(degrees: 0) : Angle(degrees: 180))
+                                
+                                Spacer()
+                            }
+                        }
+                        .gesture(
+                            TapGesture()
+                                .onEnded {
+                                    withAnimation {
+                                        self.truncateDescription.toggle()
+                                    }
+                            }
+                        )
                     }
                     
-                    // Videos subview.
-                    LoadingView(showLoading: self.isLoading, onDisappearHandler: {}) {
+                    // Course videos.
+                    Section(
+                        header: Text("Videos")
+                            .font(.caption)
+                    ) {
                         ForEach(self.courseProvider.course.videos, id: \.id) { video in
                             NavigationLink(
                                 destination: EmptyView()
                             ) {
-                                VStack {
-                                    HStack {
-                                        Image(systemName: "play.circle")
-                                        Text(video.title)
-                                            .lineLimit(1)
-                                            .truncationMode(.tail)
-        
-                                        Spacer()
-        
-                                        Text("13:45")
-                                            .foregroundColor(.secondary)
-                                    }
-                                    .padding(.horizontal)
+                                HStack {
+                                    Image(systemName: "play.circle")
+                                    Text(video.title)
+                                        .lineLimit(1)
+                                        .truncationMode(.tail)
                                     
-                                    Divider()
-                                        .padding(.leading)
-                                        .edgesIgnoringSafeArea(.trailing)
+                                    Spacer()
+                                    
+                                    Text("13:45")
+                                        .foregroundColor(.secondary)
                                 }
                             }
                         }
-                        .disabled(self.isLoading.wrappedValue)
                     }
                 }
             }
         }
+        .disabled(self.isLoading.wrappedValue)
         .onAppear {
             // Unhide the navigation bar.
             self.hideNavigationBar = false
-            
-            // Load the course from the provider.
-            self.courseProvider.loadCourse()
         }
         .navigationBarTitle("Course", displayMode: .inline)
     }

@@ -1,3 +1,4 @@
+import os.log
 import Foundation
 
 final class CourseDetailProvider: ObservableObject {
@@ -12,10 +13,12 @@ final class CourseDetailProvider: ObservableObject {
         guard let url = URL(
             string: "http://192.168.1.127:8080/api/course/detail/\(self.courseID)/"
         ) else {
-                fatalError("[Course/Detail] - Could not construct URL.")
+            fatalError("[Course/Detail] - Could not construct URL.")
         }
         
         self.url = url
+        
+        self.loadCourse()
     }
     
     func loadCourse() {
@@ -29,12 +32,8 @@ final class CourseDetailProvider: ObservableObject {
             switch response.statusCode {
             case 200:
                 DispatchQueue.main.async {
-                    self.course = decodeJSON(data: data)
-                }
-
-                // Indicate end of loading.
-                DispatchQueue.main.async {
                     self.isLoading = false
+                    self.course = decodeJSON(data: data)
                 }
                     
             default:

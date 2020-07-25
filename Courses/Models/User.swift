@@ -1,7 +1,5 @@
 import os.log
 import Foundation
-import CoreData
-import UIKit.UIApplication
 import Combine
 
 /// A class that manages all of the user's information sent and received from the server.
@@ -32,10 +30,12 @@ final class UserSession: ObservableObject {
         }
         
         // Creating a URL to the server.
-        let url = URL(string: "http://192.168.1.127:8080/api/login/")
+        guard let url = URL(string: "http://192.168.1.127:8080/api/login/") else {
+            fatalError("[Login] - Could not construct URL.")
+        }
         
         // Creating a request to the URL of the server and setting some parameters.
-        var urlRequest = URLRequest(url: url!)
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = encodedData
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")

@@ -4,9 +4,11 @@ import SwiftUI
 /// A function to fetch all the courses that this teacher has / is teaching.
 func getAllCourses() -> [CourseSummary] {
     // Creating a `URLRequest` object.
-    var urlRequest = URLRequest(
-        url: URL(string: "http://192.168.1.127:8080/api/teacher/courses/all")!
-    )
+    guard let url = URL(string: "http://192.168.1.127:8080/api/teacher/courses/all") else {
+        fatalError("[Teacher/AllCourses] - Could not construct URL.")
+    }
+    
+    var urlRequest = URLRequest(url: url)
     // Configuring request parameters.
     urlRequest.httpMethod = "GET"
     

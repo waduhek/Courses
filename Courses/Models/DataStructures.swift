@@ -95,7 +95,9 @@ struct CourseSummary: Decodable, Identifiable {
     var imageURL: String
     
     var image: Image {
-        loadImage(fromURL: self.imageURL)
+        get {
+            loadImage(fromURL: self.imageURL)
+        }
     }
 }
 
@@ -109,7 +111,9 @@ struct Course: Decodable, Identifiable {
     private var imageURL: String
     
     var image: Image {
-        loadImage(fromURL: self.imageURL)
+        get {
+            loadImage(fromURL: self.imageURL)
+        }
     }
     
     init() {

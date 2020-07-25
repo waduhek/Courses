@@ -122,18 +122,23 @@ func decodeFromFile<T: Decodable>(_ filename: String) -> T {
 /// A utility function to load an image from a URL.
 /// - Parameter fromURL: The URL of the image as a `String`
 /// - Returns: An `Image` object of the image as received from the server.
-func loadImage(fromURL url: String) -> Image {
-    let (data, response, _) = syncDataTaskWithURLRequest(
-        URLRequest(url: URL(string: url)!)
-    )
+func loadImage(fromURL urlString: String) -> Image {
+    guard let url = URL(string: urlString) else {
+        fatalError("[Utils/LoadImage] - Could not construct URL.")
+    }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "GET"
+    
+    let (data, response, _) = syncDataTaskWithURLRequest(request)
     
     switch response.statusCode {
     case 200:
         guard let uiImage = UIImage(data: data) else {
-            fatalError("[DS/Course] - Could not create `UIImage` object from `Data`.")
+            fatalError("[Utils/LoadImage] - Could not create `UIImage` object from `Data`.")
         }
         return Image(uiImage: uiImage)
     default:
-        fatalError("[DS/Course] - Image could not be found.")
+        fatalError("[Utils/LoadImage] - Image could not be found.")
     }
 }
